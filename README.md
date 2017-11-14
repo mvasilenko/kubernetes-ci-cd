@@ -105,13 +105,23 @@ Let’s make a change to an HTML file in the cloned project. Open the /applicati
 
 Now let’s build an image, giving it a special name that points to our local cluster registry.
 
-`docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan`
+```
+docker build -t 127.0.0.1:30400/hello-kenzan:latest \
+-f applications/hello-kenzan/Dockerfile \
+applications/hello-kenzan
+```
 
 #### Step12
 
 We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster.
 
-`docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"`
+```
+docker stop socat-registry; \
+docker rm socat-registry; \
+docker run -d -e "REGIP=`minikube ip`" \
+--name socat-registry -p 30400:5000 chadmoon/socat:latest \
+bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
+```
 
 #### Step13
 
@@ -143,7 +153,10 @@ Launch a web browser and view the service.
 
 Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
 
-`kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins`
+```
+kubectl apply -f manifests/jenkins.yml; \
+kubectl rollout status deployment/jenkins
+```
 
 #### Step2
 
@@ -155,7 +168,11 @@ Open the Jenkins UI in a web browser.
 
 Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT.
 
-`kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword`
+```
+kubectl exec -it `kubectl get pods \
+--selector=app=jenkins --output=jsonpath={.items..metadata.name}` \
+cat /root/.jenkins/secrets/initialAdminPassword
+```
 
 #### Step4
 
@@ -235,13 +252,22 @@ The crossword application is a multi-tier application whose services depend on e
 
 Now we're going to walk through an initial build of the monitor-scale service.
 
-`docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale`
+```
+docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` \
+-f applications/monitor-scale/Dockerfile applications/monitor-scale
+```
 
 #### Step6
 
 Set up a proxy so we can push the monitor-scale Docker image we just built to our cluster's registry.
 
-`docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"`
+```
+docker stop socat-registry; \
+docker rm socat-registry; \
+docker run -d -e "REGIP=`minikube ip`" \
+--name socat-registry -p 30400:5000 chadmoon/socat:latest \
+bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
+```
 
 #### Step7
 
