@@ -45,7 +45,7 @@ To complete the tutorial manually, follow the steps below.
 
 Start up the Kubernetes cluster with Minikube, giving it some extra resources.
 
-`minikube start --memory 8000 --cpus 4 --vm-driver=xhyve` # for MacOS X
+`minikube start --memory 8000 --cpus 4 --vm-driver=xhyve # for MacOS X`
 
 
 #### Step2
