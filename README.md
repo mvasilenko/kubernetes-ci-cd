@@ -133,7 +133,7 @@ With our proxy container up and running, we can now push our image to the local 
 
 The proxy’s work is done, so you can go ahead and stop it.
 
-`docker stop socat-registry;`
+`docker stop socat-registry`
 
 #### Step15
 
